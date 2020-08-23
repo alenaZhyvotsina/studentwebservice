@@ -1,6 +1,7 @@
 package telran.ashkelon2020.student.configuration;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration.AccessLevel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,7 +18,26 @@ public class StudentConfiguration {
 	
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
+		
+		//чтобы это работало, должны быть установлены setter-ы в классах destination
+		// or
+		/*
+		modelMapper.createTypeMap(Student.class, StudentResponseDto.class);
+		modelMapper.validate();
+		
+		modelMapper.createTypeMap(Student.class, StudentDto.class);
+		modelMapper.validate();
+		*/
+		modelMapper.getConfiguration()
+			.setFieldMatchingEnabled(true)
+			.setSkipNullEnabled(true)
+			//.setFieldAccessLevel(AccessLevel.PROTECTED)
+			.setFieldAccessLevel(AccessLevel.PRIVATE);
+		
+		//modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		return modelMapper;
 	}
 
 }

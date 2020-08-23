@@ -65,4 +65,15 @@ public class StudentController {
 					.collect(Collectors.toList());
 	}
 	
+	@GetMapping("/students/name/{name}")
+	public List<StudentResponseDto> findStudentByName(@PathVariable String name) {
+		return studentService.findStudentsByName(name);		
+	}
+	
+	@GetMapping("/students/name/{name}/minid/{minId}")
+	public List<StudentResponseDto> findStudentByNameMinId(@PathVariable String name, 
+										@PathVariable int minId) {
+		return studentService.findStudentsByNameAndIdGreatThan(name, minId);		
+	}
+	
 }

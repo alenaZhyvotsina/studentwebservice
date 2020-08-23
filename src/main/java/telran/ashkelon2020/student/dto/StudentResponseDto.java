@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+//@Setter
 public class StudentResponseDto {
 	
 	Integer id;

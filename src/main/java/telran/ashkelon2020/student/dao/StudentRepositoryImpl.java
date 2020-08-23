@@ -2,6 +2,8 @@ package telran.ashkelon2020.student.dao;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,8 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 	Map<Integer, Student> students = new ConcurrentHashMap<>();
 	
+	Lock lock = new ReentrantLock();
+	
 	@Override
 	public boolean addStudent(Student student) {
 		return students.putIfAbsent(student.getId(), student) == null;
@@ -19,34 +23,60 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 	@Override
 	public Student findStudentById(int id) {
-		return students.get(id);
+		try {
+			lock.lock();
+			return students.get(id);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public Student deleteStudent(int id) {
-		return students.remove(id);
+		try {
+			lock.lock();
+			return students.remove(id);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public Student updateStudent(int id, String name, String password) {
-		Student student = students.get(id);
-		if(student == null) {
-			return null;
+		try {
+			lock.lock();
+			
+			Student student = students.get(id);
+			/*
+			if(student == null) {
+				return null;
+			}
+			*/
+			if (name != null && !name.isEmpty())
+				student.setName(name);
+			if (password != null && !password.isEmpty())
+				student.setPassword(password);
+			return student;
+		} finally {
+			lock.unlock();
 		}
-		if(name != null && !name.isEmpty()) student.setName(name);
-		if(password != null && !password.isEmpty()) student.setPassword(password);
-		return student;
 	}
 
 	@Override
 	public boolean addScore(int id, String exam, int score) {
-		Student student = students.get(id);
-		/*
-		if(student == null) {
-			return false;
+		try {
+			lock.lock();
+			
+			Student student = students.get(id);
+			/*
+			if(student == null) {
+				return false;
+			}
+			*/
+			return student.getScores().put(exam, score) == null;
+		} finally {
+			lock.unlock();
 		}
-		*/
-		return student.getScores().put(exam, score) == null;
 	}
 
 }
