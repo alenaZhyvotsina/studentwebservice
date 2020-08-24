@@ -177,4 +177,25 @@ public class StudentServiceImpl implements StudentService {
 				.collect(Collectors.toList());			
 	}
 
+	@Override
+	public long studentsQuantity(List<String> names) {
+		//return studentRepository.findByNameIn(names).count();
+		return studentRepository.countByNameIn(names);
+	}
+
+	@Override
+	public List<StudentResponseDto> findStudentsByExamScore(String exam, int score) {
+		/*
+		return studentRepository.findBy()
+				.filter(s -> s.getScores().containsKey(exam))
+				.filter(s -> s.getScores().get(exam) >= score)
+				.map(s -> modelMapper.map(s, StudentResponseDto.class))
+				.collect(Collectors.toList());
+		*/
+		
+		return studentRepository.findByExamAndScoreGreaterThanEqual(exam, score)
+				.map(s -> modelMapper.map(s, StudentResponseDto.class))
+				.collect(Collectors.toList());
+	}
+
 }

@@ -76,4 +76,15 @@ public class StudentController {
 		return studentService.findStudentsByNameAndIdGreatThan(name, minId);		
 	}
 	
+	@PostMapping("/quantity/students")
+	public long studentsQuantity(@RequestBody List<String> names){
+		return studentService.studentsQuantity(names);
+	}
+	
+	@GetMapping("/students/exam/{exam}/minscore/{score}")
+	public List<StudentResponseDto> findStudentsByExamScore(@PathVariable String exam, 
+										@PathVariable int score) {
+		return studentService.findStudentsByExamScore(/*"scores." +*/ exam, score);		
+	}
+	
 }

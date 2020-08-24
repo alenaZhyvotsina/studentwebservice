@@ -21,5 +21,9 @@ public interface StudentService {
 	List<StudentResponseDto> findStudentsByName(String name);
 	
 	List<StudentResponseDto> findStudentsByNameAndIdGreatThan(String name, int minId);
+	
+	long studentsQuantity(List<String> names);
+	
+	List<StudentResponseDto> findStudentsByExamScore(String exam, int score);
 
 }
